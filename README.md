@@ -1,5 +1,9 @@
 # Ghost Brain — Gemini Web → OpenAI-compatible API Bridge
 
+<p dir="rtl" align="right">
+  <small><em><span style="color:#8b949e">من این پروژه رو فقط به این دلیل نوشتم که غزل ازم ناراحته و باهام صحبت نمیکنه و نمیدونم چطور از دلش در بیارم. هدف پروژه صرفا خالی کردن انرژی روی کد بود پس لطفا اگر میخواین پروژه رو گسترش بدید همون انرژی رو برای گسترش راه های از دل یه دختر در آوردن من صرف کنید. راستی غزل اگر این متن رو دیدی <a href="APOLOGY_TO_GHAZAL.md">بیا اینجا</a></span></em></small>
+</p>
+
 یک پراکسی محلی که حساب(های) Gemini وب شما را به یک API کاملاً سازگار با OpenAI تبدیل می‌کند
 (برای Claude Code، Roo/Cline، Open WebUI، AutoClaw/OpenClaw، curl). بدون API Key گوگل —
 از همان مرورگر و اکانت خودتان استفاده می‌کند.
