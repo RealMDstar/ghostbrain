@@ -3,6 +3,11 @@
 > 📖 **English Guide Available**: [Read the full English documentation →](README_EN.md)
 
 <p dir="rtl" align="right">
+  <small><em><span style="color:#8b949e">من این پروژه رو فقط به این دلیل نوشتم که غزل ازم ناراحته و باهام صحبت نمیکنه و نمیدونم چطور از دلش در بیارم. هدف پروژه صرفا خالی کردن انرژی روی کد بود پس لطفا اگر میخواین پروژه رو گسترش بدید همون انرژی رو برای گسترش راه های از دل یه دختر در آوردن من صرف کنید. راستی غزل اگر این متن رو دیدی <a href="APOLOGY_TO_GHAZAL.md">بیا اینجا</a></span></em></small>
+</p>
+
+
+<p dir="rtl" align="right">
   <small><em><span style="color:#8b949e">I wrote this project for just one reason: Ghazal is upset with me, not talking to me, and I don't know how to apologize. So I built something that might make her smile. If you're reading this and you know her, tell her I'm sorry. ❤️</span></em></small>
 </p>
 
