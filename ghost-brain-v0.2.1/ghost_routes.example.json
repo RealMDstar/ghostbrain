@@ -1,0 +1,18 @@
+{
+  "routes": [
+    {
+      "match": "gpt-*",
+      "base_url": "https://api.openai.com/v1",
+      "api_key": "",
+      "models": ["gpt-4o", "gpt-4o-mini"],
+      "label": "OpenAI"
+    },
+    {
+      "match": "my-custom-llm",
+      "base_url": "http://127.0.0.1:9999/v1",
+      "api_key": "",
+      "models": ["my-custom-llm"],
+      "label": "Local Custom LLM"
+    }
+  ]
+}

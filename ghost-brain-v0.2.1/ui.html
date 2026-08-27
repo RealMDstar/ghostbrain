@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ghost Brain</title>
+<style>
+  :root{--bg:#0b0c10;--panel:#151821;--card:#1c2130;--ink:#e6e9f0;
+        --muted:#8b93a7;--accent:#66fcf1;--pink:#ff8fa3;--amber:#ffa502;
+        --red:#ff4757;--green:#2ed573;--radius:14px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,sans-serif;
+       min-height:100vh;padding:18px}
+  h1{font-size:20px;font-weight:800;letter-spacing:.3px}
+  h1 small{color:var(--muted);font-weight:400;font-size:12px;display:block;margin-top:2px}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .card{background:var(--panel);border:1px solid #232a3b;border-radius:var(--radius);
+        padding:16px;margin-top:14px}
+  .card h2{font-size:13px;color:var(--accent);margin-bottom:10px;font-weight:700}
+  .pill{display:inline-block;padding:4px 10px;border-radius:99px;font-size:11px;
+        font-weight:700;margin:2px 4px 2px 0;background:#232a3b}
+  .pill.healthy{background:#123524;color:var(--green)}
+  .pill.busy{background:#3a2f12;color:var(--amber)}
+  .pill.rate_limited,.pill.offline{background:#3a1518;color:var(--red)}
+  .pill.needs_login{background:#331a2b;color:var(--pink)}
+  .btn{background:linear-gradient(135deg,#8e44ad,#6c3483);color:#fff;border:none;
+       border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer;font-size:13px}
+  .btn:hover{filter:brightness(1.15)}
+  .btn.ghost{background:#232a3b;color:var(--ink)}
+  select,input[type=text],textarea{background:#0f1220;color:var(--ink);border:1px solid #2a3247;
+       border-radius:10px;padding:10px;font-size:13px;width:100%}
+  textarea{min-height:70px;resize:vertical}
+  label{font-size:11px;color:var(--muted);display:block;margin:8px 0 4px}
+  #out{background:#0a0c14;border:1px solid #232a3b;border-radius:10px;padding:12px;
+       min-height:120px;max-height:280px;overflow:auto;font-size:13px;white-space:pre-wrap;
+       font-family:Consolas,monospace;color:#c9f2ef;margin-top:10px}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th,td{text-align:right;padding:7px 8px;border-bottom:1px solid #232a3b}
+  th{color:var(--muted);font-weight:700}
+  .saved{color:var(--green);font-weight:800}
+  .grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}
+  @media(max-width:900px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <div class="row" style="justify-content:space-between;align-items:center">
+    <h1>Ghost Brain <small>پل Gemini Web به API سازگار با OpenAI — پورت 8000</small></h1>
+    <div>
+      <button class="btn ghost" onclick="addAccount()">+ افزودن اکانت جدید</button>
+      <button class="btn" onclick="refresh()">بروزرسانی</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>وضعیت استخر توکن (اکانت‌ها)</h2>
+    <div id="workers">در حال بارگذاری...</div>
+    <div style="margin-top:8px;font-size:12px;color:var(--muted)">
+      توکن ذخیره‌شده: <span id="saved" class="saved">0</span>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>تست چت</h2>
+      <label>مدل</label>
+      <select id="model"></select>
+      <label>پیام</label>
+      <textarea id="msg" placeholder="مثلاً: یه تابع پایتون بنویس که فایل JSON رو بخونه..."></textarea>
+      <div style="margin-top:10px"><button class="btn" onclick="send()">ارسال (Stream)</button></div>
+      <div id="out"></div>
+    </div>
+    <div class="card">
+      <h2>ترافیک و خط لوله</h2>
+      <table id="traffic">
+        <thead><tr><th>زمان</th><th>خط لوله</th><th>کارگر</th><th>وضعیت</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+<script>
+const $=id=>document.getElementById(id);
+let traffic=[];
+async function refresh(){
+  try{
+    const r=await fetch('/api/status'); const s=await r.json();
+    $('workers').innerHTML=s.workers.map(w=>
+      `<span class="pill ${w.status}">${w.profile} — ${w.status}${w.model?' · '+w.model:''}</span>`
+    ).join('')||'—';
+    $('saved').textContent=s.saved_tokens;
+    const sel=$('model');
+    if(sel.options.length===0 && s.model_options && s.model_options.length){
+      s.model_options.forEach(m=>{
+        const o=document.createElement('option');o.value=m.id;o.textContent=m.name;sel.add(o);
+      });
+    } else if(sel.options.length===0 && s.models && s.models.length){
+      s.models.forEach(m=>{
+        const o=document.createElement('option');o.value=m;o.textContent=m;sel.add(o);
+      });
+    }
+  }catch(e){$('workers').textContent='خطا در ارتباط با سرور';}
+}
+async function addAccount(){
+  await fetch('/api/accounts',{method:'POST'});
+  alert('پروفایل جدید ساخته شد. پنجره مرورگر باز شده — وارد گوگل شوید.');
+  refresh();
+}
+function logRow(pipeline,worker,status){
+  traffic.unshift({t:new Date().toLocaleTimeString('fa-IR'),p:pipeline,w:worker,s:status});
+  traffic=traffic.slice(0,40);
+  const tb=$('traffic').querySelector('tbody');
+  tb.innerHTML=traffic.map(r=>`<tr><td>${r.t}</td><td>${r.p}</td><td>${r.w}</td><td>${r.s}</td></tr>`).join('');
+}
+async function send(){
+  const msg=$('msg').value.trim(); if(!msg) return;
+  const model=$('model').value; const out=$('out'); out.textContent='';
+  logRow('GHOST_DIRECT','—','در حال ارسال');
+  try{
+    const res=await fetch('/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model,messages:[{role:'user',content:msg}],stream:true})
+    });
+    const reader=res.body.getReader(); const dec=new TextDecoder();
+    let buf='';
+    while(true){
+      const {done,value}=await reader.read(); if(done) break;
+      buf+=dec.decode(value,{stream:true});
+      const lines=buf.split('\n'); buf=lines.pop();
+      for(const line of lines){
+        if(!line.startsWith('data: ')) continue;
+        const payload=line.slice(6);
+        if(payload==='[DONE]'){logRow('GHOST_DIRECT','—','پایان');continue;}
+        try{const j=JSON.parse(payload);
+          const d=j.choices&&j.choices[0]&&j.choices[0].delta;
+          if(d&&d.content) out.textContent+=d.content;
+        }catch(e){}
+      }
+    }
+  }catch(e){out.textContent='خطا: '+e.message;}
+}
+refresh(); setInterval(refresh,3000);
+</script>
+</body>
+</html>
