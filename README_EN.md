@@ -1,6 +1,8 @@
 # Ghost Brain — Gemini Web → OpenAI-compatible API Bridge
 
-> ⚠️ **Notice**: This README has been auto-generated from a Persian original and may contain Persian language sections in code examples, comments, or descriptions. A fully refined English version will be published shortly.
+> 📖 **Persian Guide Available**: [Read the full Persian documentation →](README.md)
+
+> 💔 **Personal Note**: I wrote this project for just one reason: Ghazal is upset with me, not talking to me, and I don't know how to apologize. So I built something that might make her smile. If you're reading this and you know her, tell her I'm sorry. ❤️
 
 A local proxy that converts your Gemini Web account(s) into a fully OpenAI-compatible API
 (for Claude Code, Roo/Cline, Open WebUI, AutoClaw/OpenClaw, curl). No Google API Key required —
